@@ -4,10 +4,10 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Row  from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
-import {auth } from '../config/fire';
+import {auth } from '../../config/fire';
 import Alert from 'react-bootstrap/Alert'
 
-class Login extends Component {
+class Register extends Component {
     state = { 
         email:"",
         password:"",
@@ -27,22 +27,7 @@ class Login extends Component {
             [name]:value
         })
     }
-    login=(e)=>{
-        e.preventDefault();
-        auth.signInWithEmailAndPassword(this.state.email , this.state.password)
-            .then((u)=>{
-                console.log(u);
-                this.setState({
-                    redirectToReferrer:true
-                })
-            })
-            .catch((error)=>{
-                console.log(error);
-                this.setState({
-                    error:error.message
-                })
-            })
-    }
+   
     register =(e)=>{
         e.preventDefault();
         auth.createUserWithEmailAndPassword(this.state.email , this.state.password)
@@ -103,12 +88,6 @@ class Login extends Component {
                              />
                         </Form.Group>
                         <Button variant="primary" type="submit" 
-                            onClick={this.login}
-                        >
-                            Login
-                        </Button>
-
-                        <Button variant="primary" type="submit" 
                         onClick={this.register}
                         >
                             Register
@@ -120,4 +99,4 @@ class Login extends Component {
     }
 }
  
-export default Login;
+export default Register;

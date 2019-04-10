@@ -8,29 +8,25 @@ import Alert from 'react-bootstrap/Alert'
 import { Timeline, TimelineEvent } from "react-event-timeline";
 import 'material-icons/iconfont/material-icons.css'
 
-import {auth,db} from '../config/fire'
+import {auth,db} from '../../config/fire'
 
 class Details extends Component {
+    
     state = {
         error:undefined
       }
-addToFav=(detail)=>{
-    console.log(detail);
-     if(auth.currentUser.uid){
-        let ref = db.ref().child('favorites')
-        let fav = ref.child(auth.currentUser.uid).push(detail)
-     }else{
-         this.setState({
-             error:"You are not Logged in !!"
-         })
-     }
-    
 
-
-
-    
-}
-
+    addToFav=(detail)=>{
+        console.log(detail);
+        if(auth.currentUser.uid){
+            let ref = db.ref().child('favorites')
+            let fav = ref.child(auth.currentUser.uid).push(detail)
+        }else{
+            this.setState({
+                error:"You are not Logged in !!"
+            })
+        }  
+    }
 
     render() { 
        // console.log(this.props.details);

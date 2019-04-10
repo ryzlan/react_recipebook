@@ -7,6 +7,14 @@ import {Link} from 'react-router-dom'
 class SearchCards extends Component {
     state = {  }
 
+
+  removeFavs=(id)=>{
+
+  }
+
+
+
+
 renderCards=()=>{
   return this.props.recipe.map((r)=>{
         
@@ -27,7 +35,7 @@ renderCards=()=>{
                         search: "?name="+r.label+"&fav=1" ,
                       }}
                      > Details</Link>
-                   
+                   <button onClick={this.removeFavs({r.})}>Remove favs</button>
                    </Card.Text>
 
                    
