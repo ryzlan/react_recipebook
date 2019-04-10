@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import Row  from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
-import {auth } from '../../config/fire';
 import Alert from 'react-bootstrap/Alert'
 
 class Login extends Component {
@@ -29,35 +28,9 @@ class Login extends Component {
     }
     login=(e)=>{
         e.preventDefault();
-        auth.signInWithEmailAndPassword(this.state.email , this.state.password)
-            .then((u)=>{
-                console.log(u);
-                this.setState({
-                    redirectToReferrer:true
-                })
-            })
-            .catch((error)=>{
-                console.log(error);
-                this.setState({
-                    error:error.message
-                })
-            })
+        
     }
-    register =(e)=>{
-        e.preventDefault();
-        auth.createUserWithEmailAndPassword(this.state.email , this.state.password)
-        .then((u)=>{
-            console.log(u);
-            this.props.history.push('/')
-        })
-        .catch((error)=>{
-            console.log(error);
-            this.setState({
-                error:error.message
-            })
-            
-        })
-    }
+   
 
     render() { 
         let {from ,msg} = this.props.location.state || {from : { pathname: '/'}}

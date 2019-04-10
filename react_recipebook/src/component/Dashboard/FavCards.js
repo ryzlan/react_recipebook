@@ -35,7 +35,7 @@ renderCards=()=>{
                         search: "?name="+r.label+"&fav=1" ,
                       }}
                      > Details</Link>
-                   <button onClick={this.removeFavs({r.})}>Remove favs</button>
+                   <button >Remove favs</button>
                    </Card.Text>
 
                    

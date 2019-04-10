@@ -2,7 +2,7 @@ import React, { Component , Fragment } from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
-import {db,auth} from '../../config/fire'
+
 
 
 class AddRecipe extends Component {
@@ -31,42 +31,7 @@ class AddRecipe extends Component {
      }
      handleSubmit =(e)=>{
          e.preventDefault()
-         const {name,url , Ing ,Instr} = this.state
-         if(!(name.length > 2 && url.length > 2 && Ing.length > 2 && Instr.length > 2 )){
-            this.setState({
-                error:'Some Input Feilds are Empty !!'
-            })
-            return
-         }
-        //  let ing= this.state.Ing.split(",")
-        //  let instr = this.state.Instr.split(".")
-
-        
-         //save in db 
-         if(auth.currentUser.uid){
-            let ref = db.ref().child('recipes')
-            let recipe = ref.child(auth.currentUser.uid).push();
-
-            let obj = {
-                key:recipe.key,
-                name:name,
-                image:url,
-                ingredients:Ing,
-                instruction:Instr
-            }
-            console.log(obj);
-
-
-
-
-            recipe.set(obj)
-            console.log('added recipes ');
-            
-            }else{
-            this.setState({
-                error:"You are not Logged in !!"
-            })
-        }
+         
      }
 
 

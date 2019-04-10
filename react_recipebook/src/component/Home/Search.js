@@ -15,7 +15,8 @@ class Search extends Component {
     handleSubmit = e =>{
       e.preventDefault();
 
-      this.props.getQuery(this.state.query);
+      this.props.getRecipes(this.state.query)
+      
       this.setState({
         query:''
       })

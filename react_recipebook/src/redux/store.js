@@ -3,7 +3,7 @@ import {reactReduxFirebase ,getFirebase } from 'react-redux-firebase'
 import {reduxFirestore , getFirestore} from 'redux-firestore'
 import thunk from 'redux-thunk'
 
-import {rootReducer , initialState} from './redux/reducers/rootReducer'
+import {rootReducer , initialState} from './reducers/rootReducer'
 
 import { Fireconfig } from '../config/fire';
 import firebase from 'firebase/app'
@@ -13,7 +13,7 @@ import 'firebase/firestore'
 
 
 firebase.initializeApp(Fireconfig)
-firebase.firestore().settings({timestampsInSnapshots: true})
+//firebase.firestore().settings({timestampsInSnapshots: true})
 
 
 const enhancers = [
