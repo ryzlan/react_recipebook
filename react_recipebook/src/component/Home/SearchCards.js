@@ -33,8 +33,7 @@ renderCards=()=>{
                 <Card.Text>
                 <Link 
                 to={{
-                  pathname: "/details/"+r.recipe_id,
-                  search: "?name="+r.title+"&fav=0" ,
+                  pathname: "/details/"+r.idMeal,
                 }}
                 > Details</Link>
               </Card.Text>

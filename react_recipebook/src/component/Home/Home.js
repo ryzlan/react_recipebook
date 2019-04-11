@@ -10,17 +10,6 @@ import {connect } from 'react-redux'
 import {getRecipes ,getLatRecipes} from '../../redux/actions/RecipesActions'
 
 
-// const edamanID='c1d39a11';
-// const edamanKey= '4e55ac919b28c851783901d72f466760';
-//const Edmanurl = `https://api.edamam.com/search?q=${q}&app_id=${edamanID}&app_key=${edamanKey}&count=10`
-//Chicken cacciatore
-{/* <WhisperSpinner 
-              loading={this.state.loading}
-              size={1000}
-          /> */}
-
-
-
 class Home extends Component {
   componentWillMount(){
     this.props.getRecipes();

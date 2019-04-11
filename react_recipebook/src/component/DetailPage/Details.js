@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PieCharts from './PieCharts'
+import {  WhisperSpinner } from "react-spinners-kit";
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Row  from 'react-bootstrap/Row'
@@ -10,86 +10,99 @@ import 'material-icons/iconfont/material-icons.css'
 
 
 class Details extends Component {
-    
-    state = {
-        error:undefined
-      }
 
-    addToFav=(detail)=>{
-        console.log(detail);
-        // if(auth.currentUser.uid){
-        //     let ref = db.ref().child('favorites')
-        //     let fav = ref.child(auth.currentUser.uid).push(detail)
-        // }else{
-        //     this.setState({
-        //         error:"You are not Logged in !!"
-        //     })
-        // }  
-    }
 
-    render() { 
-       // console.log(this.props.details);
-        if(this.props.details){
-            let obj=[];
-            this.props.details.digest.splice(0,13).map((d)=>{
-                obj.push({"name":d.label, value:d.daily })
-                return null;
-            })
-            console.log(this.props.showbtn);
+
+
+
+    render() {
+        console.log(this.props.detail);
+        const { strInstructions, strMeal, strMealThumb } = this.props.detail;
+        if (strInstructions) {
+            let howtoMake = strInstructions.split('.');
+            howtoMake = howtoMake.slice(0,howtoMake.length-1);
+            let ingredients = [];
+            //strIngredient1
+            //strMeasure1
+            for(let i = 1 ; i< 21 ;i++){
+                try{
+
+                    let a = eval("this.props.detail.strIngredient" + i);
+                    let b = eval("this.props.detail.strMeasure" + i);
+                    ingredients.push(a +" "+ b );
+                }catch(err){
+                    console.log(err);
+                    
+                }
+                
+
+            }
+            console.log(ingredients);
+            ingredients = ingredients.filter(entry => entry.trim() !== '')
+            console.log(ingredients);
             
+            
+
+
             return (
                 <Container>
-                    {this.state.error &&  <Alert  variant={'danger'}>{this.state.error}</Alert>}
+                  { this.props.error && <Alert variant={'danger'}>{this.props.error}</Alert>}
                     <Row className="margin-top">
-                        <Col>
-                        <img
-                        src={this.props.details.image}
-                        alt={this.props.details.label}
-                        />
-                        <h2>{this.props.details.label}</h2>
-                        {this.props.showbtn === 0 &&
-                        <Button 
-                            onClick={(e)=>{
-                                this.addToFav(this.props.details)
-                            }}
-                            >
-                                Add to Favorite
-                            <span className="material-icons favorite">
-                                favorite_border
-                            </span>
-                         </Button>
-                        }
                         
-                        </Col>
-                        <Col>
-                        <h3>Ingredients</h3>
-                        <Timeline>
-                            {this.props.details.ingredients.map((i,index)=>{
-                                return(
-                                    <TimelineEvent 
-                                    key={index}
-                                    title={"Step "+ parseInt(index+1) }
-                                    icon={<i className="material-icons md-18">check_circle</i>}
-                                >
-                                     {i.text}
-                             </TimelineEvent>
-                                )
-                            })}
-                        </Timeline>
-                        </Col>
+                            <Col lg={8}>
+                            <img
+                                src={strMealThumb}
+                                alt={strMeal}
+                            />
+                            </Col>
+                            <Col lg={4}>
+                            <Timeline>
+                                {ingredients.map((i, index) => {
+                                    return (
+                                        <TimelineEvent
+                                            key={index}
+                                            title={i}
+                                            icon={<i className="material-icons md-36">label_important</i>}
+                                            style={{marginBottom:"40px"}}
+                                        >   
+                                        </TimelineEvent>
+                                    )
+                                })}
+                            </Timeline>
+
+                            </Col>
+                                
+                            <div>
+                            <h2>{strMeal} </h2>
+                            { " " }
+                        
+                            <h3>How to make :</h3>
+                            <Timeline>
+                                {howtoMake.map((i, index) => {
+                                    return (
+                                        <TimelineEvent
+                                            key={index}
+                                            title={"Step " + parseInt(index + 1)}
+                                            icon={<i className="material-icons md-18">check_circle</i>}
+                                        >
+                                            {i}
+                                        </TimelineEvent>
+                                    )
+                                })}
+                            </Timeline>
+                            </div>
                     </Row>
                     <Row>
-                        <PieCharts data={obj} />
-                        
                     </Row>
-        
-                    
                 </Container>
-                 );
+            );
+        }else{
+          return  <WhisperSpinner loading={this.props.loading}size={500} /> 
         }
-        return null;
-        
     }
+
+
+
 }
  
 export default Details;

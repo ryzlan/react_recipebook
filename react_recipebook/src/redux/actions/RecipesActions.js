@@ -1,10 +1,7 @@
 import {
-    GET_RECIPES_PENDING,
-    GET_RECIPES ,
-    GET_RECIPES_FAIL,
-    GET_LATEST_RECIPES_PENDING,
-    GET_LATEST_RECIPES,
-    GET_LATEST_RECIPES_FAIL
+    GET_RECIPES_PENDING,GET_RECIPES ,GET_RECIPES_FAIL,
+    GET_LATEST_RECIPES_PENDING,GET_LATEST_RECIPES,GET_LATEST_RECIPES_FAIL,
+    GET_SINGLE_RECIPES,GET_SINGLE_RECIPES_FAIL,GET_SINGLE_RECIPES_PENDING
 } from '../reducers/recipesReducers'
 import { actionTypes } from 'redux-firestore';
 
@@ -68,7 +65,27 @@ export const getLatRecipes = () =>{
 
 export const getSingleRecipe = (id) =>{
     return (dispatch , getState )=>{
+        dispatch({ type: GET_SINGLE_RECIPES_PENDING})
         
+        const getSingleRecipeURL=`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+        fetch(getSingleRecipeURL)
+            .then((res)=>{
+                return res.json()
+            })
+            .then((data) =>{
+                dispatch({
+                    type:GET_SINGLE_RECIPES,
+                    payload:data.meals[0]
+                })
+            })
+            .catch((err)=>{
+                dispatch({
+                    type:GET_SINGLE_RECIPES_FAIL,
+                    payload:err
+                })
+            })
+
+
     }
 }
 

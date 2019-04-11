@@ -1,18 +1,28 @@
 export const GET_RECIPES_PENDING = "GET_RECIPES_PENDING";
 export const GET_RECIPES = "GET_RECIPES";
 export const GET_RECIPES_FAIL = "GET_RECIPE_FAIL";
+
 export const GET_LATEST_RECIPES_PENDING = "GET_LATEST_RECIPES_PENDING";
 export const GET_LATEST_RECIPES = "GET_LATEST_RECIPES";
 export const GET_LATEST_RECIPES_FAIL = "GET_LATEST_RECIPES_FAIL";
+
+export const GET_SINGLE_RECIPES_PENDING = "GET_SINGLE_RECIPES_PENDING";
+export const GET_SINGLE_RECIPES = "GET_SINGLE_RECIPES";
+export const GET_SINGLE_RECIPES_FAIL = "GET_SINGLE_RECIPES_FAIL";
 
 
 const initialState = {
     Ingrecipes:[],
     errorIng:'',
     loadingIng:false,
+
     latestrecipes:[],
     loadingLat:false,
-    errorLat:''
+    errorLat:'',
+
+    singlerecipe:{},
+    loadingsingle:false,
+    errorsingle:'',
 };
 
 export const recipeReducer =(state= initialState , action) =>{
@@ -50,7 +60,26 @@ export const recipeReducer =(state= initialState , action) =>{
             return{
                 ...state,
                 loadingLat:true
-            }     
+            }  
+        case GET_SINGLE_RECIPES:
+            return{
+                ...state,
+                singlerecipe:action.payload,
+                loadingsingle:false
+            }
+        case GET_SINGLE_RECIPES_FAIL:
+            return {
+                ...state,
+                errorsingle:action.payload,
+                loadingsingle:false
+            }
+        case GET_SINGLE_RECIPES_PENDING:
+            return{
+                ...state,
+                loadingsingle:true
+            }    
+            
+
         default:
             return state;
     }
