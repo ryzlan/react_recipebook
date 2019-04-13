@@ -1,12 +1,10 @@
 import {combineReducers} from 'redux'
-import { firebaseReducer} from 'react-redux-firebase'
-import { firestoreReducer} from 'redux-firestore'
 import {recipeReducer} from './recipesReducers'
+import {authReducer} from './authReducer'
 
 export const rootReducer = combineReducers({
+    auth:authReducer,
     recipes: recipeReducer,
-    firebase:firebaseReducer,
-    firestore:firestoreReducer
 });
 
 export const initialState ={}

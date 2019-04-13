@@ -1,8 +1,14 @@
+import * as firebase from 'firebase'
+import 'firebase/auth'
+import * as firestr from  'firebase/firestore'
+
+
+
 
 
 
   
- export const Fireconfig = {
+ const Fireconfig = {
     apiKey: "AIzaSyBdn7yDl-yQs4ltyHUVFL65mKsbb-nyQLU",
     authDomain: "customlistview-36cec.firebaseapp.com",
     databaseURL: "https://customlistview-36cec.firebaseio.com",
@@ -10,28 +16,12 @@
     storageBucket: "customlistview-36cec.appspot.com",
     messagingSenderId: "502747561918"
   };
- //const fire = 
- //firebase.initializeApp(config);
-// const databaseRef = firebase.database().ref();
-// export const favRecipes = databaseRef.child('recipes');
 
 
 
+firebase.initializeApp(Fireconfig)
+const databaseRef= firebase.database().ref();
+export const favRef  = databaseRef.child('favorites');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
- //const auth = fire.auth();
- //const db = fire.database();
-
-//export  {auth, db} ;
+export const authRef = firebase.auth();
+export const firestore = firestr;

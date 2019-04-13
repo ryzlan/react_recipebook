@@ -11,7 +11,7 @@ class SearchCards extends Component {
 
 renderCards=()=>{
   const {recipe ,error} = this.props
-  console.log(recipe);
+  //console.log(recipe);
   
   if(isEmpty(recipe)){
     return( <div>Nothing to see

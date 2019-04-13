@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {BrowserRouter , Route , Link , Switch , Redirect } from 'react-router-dom'
+import {BrowserRouter , Route , Switch } from 'react-router-dom'
+import {connect} from 'react-redux'
+import {fetchUser} from './redux/actions/authActions'
+import requireAuth from './HOC/requireAuth'
 
 
 import Navigation from './component/Navigations/Navigation'
@@ -10,33 +13,17 @@ import Dashboard from './component/Dashboard/Dashboard'
 import Register from './component/auth/Register';
 import AddRecipe from './component/Create/AddRecipe';
 import Home from './component/Home/Home';
+import NotAuthorized from './component/NotAuthorized'
 
 
 class App extends Component {
-state={
-  user:{}
+
+
+componentWillMount(){
+  this.props.fetchUser();
+
+
 }
-componentDidMount(){
- // this.authListener();
-}
-// authListener(){
-//     auth.onAuthStateChanged((user) =>{
-//       //console.log(user);
-//       if(user){
-//         this.setState({
-//           user:user
-//         })
-//         //localStorage.setItem('user', user.uid)
-//       }else{
-//         this.setState({
-//           user:null
-//         })
-//        // localStorage.removeItem('user')
-//       }
-      
-//     })
-//   }
-//<PrivateRoute path="/details/:code" component={DetailsPage} user={this.state.user}  />
 
   render() {
     return (
@@ -44,13 +31,14 @@ componentDidMount(){
       <div>
       <Navigation />
       <Switch>
-      <Route exact path="/" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
-      <Route path='/dashboard' component={Dashboard}  />
-      <Route path="/details/:id" component={DetailsPage} />
-      <Route path='/create' component={AddRecipe}  />
-      <Route component={Page404} />
+        <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path='/dashboard' component={requireAuth(Dashboard)}  />
+        <Route path="/details/:id" component={requireAuth(DetailsPage)} />
+        <Route path='/create' component={requireAuth(AddRecipe)}  />
+        <Route path='/NotAuthorized' component={NotAuthorized} />
+        <Route component={Page404} />
       </Switch>
       </div>
       </BrowserRouter>
@@ -59,24 +47,6 @@ componentDidMount(){
 }
 
 
-function PrivateRoute({component: Component, user ,...rest } ){
-  return(
-    <Route 
-    {...rest}
-     render={ props =>
-      user ? 
-      (<Component {...props} user={user} /> ) : 
-      (<Redirect to={{
-        pathname:'/login',
-        state:{
-          from:props.location,
-          msg:"You Must Login to View this Content!!!"
-        }
-      }} /> 
-      )
-    }
-    />
-  );
-}
 
-export default App;
+
+export default  connect(null, {fetchUser})(App);
