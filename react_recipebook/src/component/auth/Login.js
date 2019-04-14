@@ -6,17 +6,14 @@ import Row  from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
 
+import {connect}  from 'react-redux'
+import {signIn} from '../../redux/actions/authActions'
+
+
 class Login extends Component {
     state = { 
         email:"",
         password:"",
-        error:undefined,
-        redirectToReferrer:false
-    }
-    changeError =(e)=>{
-        this.setState({
-            error:undefined
-        })
     }
 
     handleChange=(e)=>{
@@ -28,22 +25,21 @@ class Login extends Component {
     }
     login=(e)=>{
         e.preventDefault();
-        
+        this.props.signIn(this.state)
     }
    
 
     render() { 
-        let {from ,msg} = this.props.location.state || {from : { pathname: '/'}}
-        let {redirectToReferrer} = this.state ;
 
-        if(redirectToReferrer) return <Redirect to={from} />;
+        if(this.props.auth){
+            return <Redirect to="/" />
+        }
 
         return ( 
             <Container>
-                {this.state.error &&
-                    <Alert  variant={'danger'}>{this.state.error}</Alert>
-                }
-                {msg && <Alert  variant={'warning'}>{msg}</Alert>  }
+                {this.props.authError ?
+                    <Alert  variant={'danger'}>{this.props.authError}</Alert>
+                 : ""}
                 <Row>
                     
                 
@@ -56,12 +52,8 @@ class Login extends Component {
                             variant="outlined"
                             value={this.state.email}
                             onChange={this.handleChange} 
-                            onFocus={this.changeError}
                             size="lg"
                             />
-                            <Form.Text className="text-muted">
-                            We'll never share your email with anyone else.
-                            </Form.Text>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicPassword">
@@ -80,17 +72,26 @@ class Login extends Component {
                         >
                             Login
                         </Button>
-
-                        <Button variant="primary" type="submit" 
-                        onClick={this.register}
-                        >
-                            Register
-                        </Button>
                     </Form>
                 </Row>
             </Container>
          );
     }
 }
+
+
+const mapStateToProps = state =>{
+    return{
+        authError:state.authStatus.authError,
+        auth:state.authStatus.auth
+
+    }
+}
+
+const mapDispatchToProps =(dispatch) =>{
+    return {
+        signIn:(creds)=>dispatch(signIn(creds))
+    }
+}
  
-export default Login;
+export default connect(mapStateToProps,mapDispatchToProps)(Login);

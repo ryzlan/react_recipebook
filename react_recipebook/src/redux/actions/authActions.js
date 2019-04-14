@@ -7,6 +7,7 @@ export const LOGIN_FAIL ="LOGIN_FAIL"
 export const SIGNOUT_SUCESS ="SIGNOUT_SUCESS"
 export const REGISTER_SUCESS ="REGISTER_SUCESS"
 export const REGISTER_FAIL ="REGISTER_FAIL"
+export const REGISTER_LOADING ="REGISTER_LOADING"
 
 export const fetchUser  = ()=> dispatch =>{
     authRef.onAuthStateChanged(user =>{
@@ -36,7 +37,7 @@ export const signIn =(creds)=> dispatch =>{
         .catch((err) =>{
             dispatch({
                 type:LOGIN_FAIL,
-                payload:err
+                payload:err.message
             })
         })
 }
@@ -58,30 +59,24 @@ export const signout = ()=>dispatch =>{
 
 
 export const register = (creds) => dispatch =>{
+    dispatch({
+        type:REGISTER_LOADING
+    })
+    
+
 
     authRef.createUserWithEmailAndPassword(
-        creds.emial, 
+        creds.email, 
         creds.password 
     ).then((res) =>{
         console.log(res);
-        // if(user){
-        //     user.updateProfile({
-        //         diplayName:creds.name,
-        //     })
-        //     .then(()=>{
-        //         dispatch({
-        //             type:REGISTER_SUCESS,
-        //             payload:user
-        //         })
-        //     })
-        // }else{
-        //     throw new Error('Could not Create New User');
-        // }
+        if(res){
+            res.updateProfile({
+                diplayName:creds.firstName + creds.lastName,
+            })
+            return ;
+        }
 
-        return firestore.collection('users').doc(res.user.uid).set({
-            firstName:creds.firstName,
-            lastName:creds.lastName, 
-        })
     })
     .then(()=>{
         dispatch({
@@ -91,7 +86,7 @@ export const register = (creds) => dispatch =>{
     .catch((err) =>{
         dispatch({
             type:REGISTER_FAIL,
-            payload:err
+            payload:err.message
         })
     })
 }

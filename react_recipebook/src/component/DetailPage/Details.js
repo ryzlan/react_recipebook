@@ -9,40 +9,45 @@ import { Timeline, TimelineEvent } from "react-event-timeline";
 import 'material-icons/iconfont/material-icons.css'
 
 
+import {connect } from 'react-redux'
+import {addFav,getFav} from '../../redux/actions/RecipesActions'
+
 class Details extends Component {
 
-
-
-
+    state={
+        disable:false
+    }
+    componentDidMount(){
+        
+        this.props.getFav(this.props.auth.uid)
+    }
 
     render() {
-        console.log(this.props.detail);
-        const { strInstructions, strMeal, strMealThumb } = this.props.detail;
+        
+        
+        const {idMeal, strInstructions, strMeal, strMealThumb } = this.props.detail;
         if (strInstructions) {
             let howtoMake = strInstructions.split('.');
             howtoMake = howtoMake.slice(0,howtoMake.length-1);
             let ingredients = [];
-            //strIngredient1
-            //strMeasure1
             for(let i = 1 ; i< 21 ;i++){
                 try{
-
                     let a = eval("this.props.detail.strIngredient" + i);
                     let b = eval("this.props.detail.strMeasure" + i);
                     ingredients.push(a +" "+ b );
                 }catch(err){
                     console.log(err);
-                    
                 }
-                
-
             }
-            console.log(ingredients);
             ingredients = ingredients.filter(entry => entry.trim() !== '')
-            console.log(ingredients);
+             
             
+            console.log(this.props.favs);
+            console.log(idMeal.toString());
             
-
+             const flag = this.props.favs.includes(idMeal.toString())   
+            console.log(flag);
+            
 
             return (
                 <Container>
@@ -54,8 +59,15 @@ class Details extends Component {
                                 src={strMealThumb}
                                 alt={strMeal}
                             />
+                            <h2>{strMeal} </h2>
+                            {}
+                            <Button 
+                            onClick={()=>{this.props.addFav(idMeal , this.props.auth.uid)}}>
+                            Add to Favorites
+                            </Button>
                             </Col>
                             <Col lg={4}>
+                            <h3>Ingredients :</h3>
                             <Timeline>
                                 {ingredients.map((i, index) => {
                                     return (
@@ -73,7 +85,7 @@ class Details extends Component {
                             </Col>
                                 
                             <div>
-                            <h2>{strMeal} </h2>
+                            
                             { " " }
                         
                             <h3>How to make :</h3>
@@ -104,5 +116,17 @@ class Details extends Component {
 
 
 }
- 
-export default Details;
+const mapDispatchToProps = dispatch =>{
+    return{
+        addFav:(rid,uid)=>dispatch(addFav(rid,uid)),
+        getFav:(uid) => dispatch(getFav(uid))
+    }
+}
+const mapStateToProps = state =>{
+    return{
+        auth:state.authStatus.auth,
+        favs:state.recipes.favoriterecipes
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Details);

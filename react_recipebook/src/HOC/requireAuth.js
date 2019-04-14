@@ -30,7 +30,7 @@ export default function(WrappedComponent){
 
  const mapStateToProps = state =>{
      return{
-         authenticated: state.auth
+         authenticated: state.authStatus.auth
      }
  }
 

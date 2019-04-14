@@ -3,7 +3,7 @@ import {recipeReducer} from './recipesReducers'
 import {authReducer} from './authReducer'
 
 export const rootReducer = combineReducers({
-    auth:authReducer,
+    authStatus:authReducer,
     recipes: recipeReducer,
 });
 

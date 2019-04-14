@@ -39,3 +39,6 @@ code {
 .margin-top{
   margin-top: 20px;
 }
+.nav-link{
+  cursor: pointer;
+}

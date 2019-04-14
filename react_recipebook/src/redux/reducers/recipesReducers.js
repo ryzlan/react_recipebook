@@ -10,6 +10,8 @@ export const GET_SINGLE_RECIPES_PENDING = "GET_SINGLE_RECIPES_PENDING";
 export const GET_SINGLE_RECIPES = "GET_SINGLE_RECIPES";
 export const GET_SINGLE_RECIPES_FAIL = "GET_SINGLE_RECIPES_FAIL";
 
+export const ADD_FAVORITE_RECIPE = "ADD_FAVORITE_RECIPE"
+export const GET_FAVORITE_RECIPES = "GET_FAVORITE_RECIPES"
 
 const initialState = {
     Ingrecipes:[],
@@ -23,6 +25,9 @@ const initialState = {
     singlerecipe:{},
     loadingsingle:false,
     errorsingle:'',
+
+    favoriterecipes:[]
+
 };
 
 export const recipeReducer =(state= initialState , action) =>{
@@ -78,6 +83,13 @@ export const recipeReducer =(state= initialState , action) =>{
                 ...state,
                 loadingsingle:true
             }    
+        case ADD_FAVORITE_RECIPE:
+            return state   
+        case GET_FAVORITE_RECIPES:
+            return {
+                ...state,
+                favoriterecipes:[action.payload, ...state.favoriterecipes]
+            }
             
 
         default:
