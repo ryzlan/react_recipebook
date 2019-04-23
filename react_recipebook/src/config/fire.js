@@ -23,6 +23,6 @@ import * as firestr from  'firebase/firestore'
 firebase.initializeApp(Fireconfig)
 const databaseRef= firebase.database().ref();
 export const favRef  = databaseRef.child('favorites');
-export const userRecipes = databaseRef.child('userRecipes')
+export const userRecipes = databaseRef.child('recipes')
 export const authRef = firebase.auth();
 export const firestore = firestr;

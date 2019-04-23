@@ -12,6 +12,11 @@ export const GET_SINGLE_RECIPES_FAIL = "GET_SINGLE_RECIPES_FAIL";
 
 export const ADD_FAVORITE_RECIPE = "ADD_FAVORITE_RECIPE"
 export const GET_FAVORITE_RECIPES = "GET_FAVORITE_RECIPES"
+export const DELETE_FAVORITE_RECIPES = "DELETE_FAVORITE_RECIPES"
+
+export const ADD_USER_RECIPE='ADD_USER_RECIPE'
+export const GET_USER_RECIPE='GET_USER_RECIPE'
+export const DELETE_USER_RECIPE='DELETE_USER_RECIPE'
 
 const initialState = {
     Ingrecipes:[],
@@ -26,8 +31,8 @@ const initialState = {
     loadingsingle:false,
     errorsingle:'',
 
-    favoriterecipes:[]
-
+    favoriterecipes:[],
+    userRecipes:[]
 };
 
 export const recipeReducer =(state= initialState , action) =>{
@@ -83,15 +88,59 @@ export const recipeReducer =(state= initialState , action) =>{
                 ...state,
                 loadingsingle:true
             }    
-        case ADD_FAVORITE_RECIPE:
-            return state   
+        case ADD_FAVORITE_RECIPE:{
+            const newState= Object.assign([], state.favoriterecipes);
+            //check for duplicates
+            //state.filter(cat => cat.id !== action.cat.id),
+            return {
+                ...state ,
+                favoriterecipes:[...newState , Object.assign({}, action.payload) ]
+            }  
+        }
         case GET_FAVORITE_RECIPES:
             return {
                 ...state,
-                favoriterecipes:[action.payload, ...state.favoriterecipes]
+                favoriterecipes:[...action.payload]
             }
-            
+        case DELETE_FAVORITE_RECIPES:{
+            const newState= Object.assign([], state.favoriterecipes);
+            const indexOfdata = state.favoriterecipes.findIndex(data =>{
+                return data.id === action.payload
+            })
+            newState.splice(indexOfdata,1);
 
+            return {
+                ...state,
+                favoriterecipes:newState
+            }
+        }    
+        case ADD_USER_RECIPE:{
+            const newState = Object.assign([], state.userRecipes)
+            //check for duplicates
+            //state.filter(cat => cat.id !== action.cat.id),
+            return{
+                ...state,
+                userRecipes:[...newState , Object.assign({}, action.payload) ]
+            }    
+        }
+        case GET_USER_RECIPE:{
+            return{
+                ...state,
+                userRecipes:[...action.payload]
+            }
+        }
+        case DELETE_USER_RECIPE:{
+            const newState= Object.assign([], state.userRecipes);
+            const indexOfdata = state.userRecipes.findIndex(data =>{
+                return data.id === action.payload
+            })
+            newState.splice(indexOfdata,1);
+
+            return {
+                ...state,
+                userRecipes:newState
+            }
+        }    
         default:
             return state;
     }

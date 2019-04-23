@@ -2,16 +2,19 @@ import React, { Component , Fragment } from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
 
+import {connect } from 'react-redux'
+import {addRecipe} from '../../redux/actions/RecipesActions'
 
 
 class AddRecipe extends Component {
     state = { 
         name:'',
-        url:'',
+        url:'https://mamadips.com/wp-content/uploads/2016/11/defimage.gif',
         Ing:'',
-        Instr:'',
-        error:undefined
+        Instr:''
      }
      handleChange=(e)=>{
         const {value,name } = e.target;
@@ -31,13 +34,15 @@ class AddRecipe extends Component {
      }
      handleSubmit =(e)=>{
          e.preventDefault()
-         
+         this.props.addRecipe(this.state , this.props.auth.uid)
+         this.props.history.push('/dashboard')
      }
 
 
     render() { 
         return ( 
-            <Fragment>
+            <Container>
+                <Row>
                 {this.state.error && 
                  <Alert variant={'danger'}>{this.state.error}</Alert>
                 }
@@ -92,10 +97,16 @@ class AddRecipe extends Component {
                         ADD
                     </Button>
                 </Form>
-            </Fragment>
+                </Row>
+            </Container>
 
          );
     }
 }
+const mapStateToProps =  state=>{
+    return {
+        auth:state.authStatus.auth
+    }
+}
  
-export default AddRecipe;
+export default connect(mapStateToProps , {addRecipe})(AddRecipe);

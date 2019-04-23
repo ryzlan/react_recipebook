@@ -42,3 +42,18 @@ code {
 .nav-link{
   cursor: pointer;
 }
+
+.horizontal-card{
+  flex-direction: row;
+  width: 100%;
+}
+.horizontal-card .card-img{
+  width: 400px;
+}
+
+.fav-img{
+  height: 400px;
+}
+form{
+  width: 100%;
+}

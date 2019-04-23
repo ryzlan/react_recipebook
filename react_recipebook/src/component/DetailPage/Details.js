@@ -10,19 +10,12 @@ import 'material-icons/iconfont/material-icons.css'
 
 
 import {connect } from 'react-redux'
-import {addFav,getFav} from '../../redux/actions/RecipesActions'
+import {addFav} from '../../redux/actions/RecipesActions'
 
 class Details extends Component {
-
-    state={
-        disable:false
-    }
-    componentDidMount(){
-        
-        this.props.getFav(this.props.auth.uid)
-    }
-
+   
     render() {
+        
         
         
         const {idMeal, strInstructions, strMeal, strMealThumb } = this.props.detail;
@@ -40,14 +33,20 @@ class Details extends Component {
                 }
             }
             ingredients = ingredients.filter(entry => entry.trim() !== '')
+            
+
+
+            const flag = this.props.favs.find((o, i) => {
+                if (o.idMeal === idMeal) {
+                    return true; // stop searching
+                }else{
+                    return false;
+                }
+            });
+            //this.props.favs.idMeal.includes(idMeal.toString())
+            //console.log(flag);
+            
              
-            
-            console.log(this.props.favs);
-            console.log(idMeal.toString());
-            
-             const flag = this.props.favs.includes(idMeal.toString())   
-            console.log(flag);
-            
 
             return (
                 <Container>
@@ -60,11 +59,17 @@ class Details extends Component {
                                 alt={strMeal}
                             />
                             <h2>{strMeal} </h2>
-                            {}
+                            {flag ? ''
+                            :
                             <Button 
-                            onClick={()=>{this.props.addFav(idMeal , this.props.auth.uid)}}>
+                            onClick={
+                                ()=>{this.props.addFav(this.props.detail,this.props.auth.uid)
+                                }}
+                                >
                             Add to Favorites
-                            </Button>
+                            </Button> 
+                            }
+                            
                             </Col>
                             <Col lg={4}>
                             <h3>Ingredients :</h3>
@@ -118,8 +123,7 @@ class Details extends Component {
 }
 const mapDispatchToProps = dispatch =>{
     return{
-        addFav:(rid,uid)=>dispatch(addFav(rid,uid)),
-        getFav:(uid) => dispatch(getFav(uid))
+        addFav:(recipe,uid)=>dispatch(addFav(recipe,uid))
     }
 }
 const mapStateToProps = state =>{

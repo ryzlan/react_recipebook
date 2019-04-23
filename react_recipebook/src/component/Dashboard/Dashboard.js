@@ -8,6 +8,11 @@ import Col from 'react-bootstrap/Col'
 
 import FavCards from './FavCards'
 import AddedRecipes from './AddedRecipes';
+import { connect } from 'react-redux'
+import { getCreatedRecipes ,
+    deleteRecipe , 
+    getFav,
+    deleteFav} from '../../redux/actions/RecipesActions'
 
 
 class Dashboard extends Component {
@@ -18,88 +23,76 @@ class Dashboard extends Component {
         msg:''
 
     }
-    componentDidMount(){
-        this.getFavs();
-        this.getOwnRecipes();
-    
+    componentWillMount(){
+        this.props.getCreatedRecipes(this.props.auth.uid);
+        this.props.getFav(this.props.auth.uid)
     }
 
-    getFavs(){
-        // let ref = db.ref().child('favorites')
-        // let userfavs = ref.child(this.props.user.uid);
-        // userfavs.orderByKey().on('value' , (snap)=>{
-        //     //console.log('added' , snap.val() );
-        //     let obj=[]
-        //    let favs= snap.val();
-        //    let keys = Object.keys(favs)
-        //    for(let i = 0; i<keys.length ; i++){
-        //        let k= keys[i]
-        //        obj.push(  favs[k]  ) 
-        //    }
-        //    console.log(obj);
-        //    this.setState({
-        //        favs:obj
-        //    })
-        // })
+
+
+    
+    
+    handleDeleteRecipe =(id)=>{
+        console.log(id);
+        
+        this.props.deleteRecipe(id,this.props.auth.uid)
+        //this.props.history.push('/dashboard')
+    }    
+
+    handleDeleteFavs = id =>{
+        this.props.deleteFav(id,this.props.auth.uid)
+        //this.props.history.push('/dashboard')
     }
 
-    getOwnRecipes(){
-        // let ref = db.ref().child('recipes')
-        // let userRecipes = ref.child(this.props.user.uid);
-        // userRecipes.orderByKey().on('value' , (snap)=>{
-        //     console.log('added' , snap.val() );
-        //    let obj=[]
-        //    let favs= snap.val();
-        //     if(favs == null )
-        //     {
-        //         this.setState({
-        //             msg:"No Recipes added"
-        //         });
-        //         console.log(this.state.msg);
-                
-        //     }else{
-        //         let keys = Object.keys(favs)
-        //         for(let i = 0; i<keys.length ; i++){
-        //             let k= keys[i]
-        //             obj.push(  favs[k]  ) 
-        //         }
-        //         console.log(obj);
-        //         this.setState({
-        //             recipes:obj
-        //         })
-        //     }
-           
-           
-        // });
-    }
-    
-    
+
 
     render() { 
+        console.log(this.props);
         
         return (
-        <Fragment>
-        <Container>
-            <Row>
-                
-                <Col  xs={12} md={8}>
+            <Fragment>
                 <Container>
-                    <h1>Favorite Dishes</h1>
+                    
+
+
+
+                        <Row>
+                            {this.props.favs.length > 0 ?
+                                <FavCards
+                                    deleteFav={this.handleDeleteFavs}
+                                    recipe={this.props.favs} />
+                                    : 
+                                 <h1>You dont have any favorites yet...</h1>
+                            }
+                        </Row>
+
+
+                    
                     <Row>
-                {this.state.favs && <FavCards recipe={this.state.favs} /> } 
+                        {this.props.userRecipes.length > 0 ?
+                            <AddedRecipes
+                                deleteRecipe={this.handleDeleteRecipe}
+                                userRecipes={this.props.userRecipes}
+                            /> : 
+                            <h1>You didnt add any recipes yet ...</h1>
+                        }
+
                     </Row>
+
+
                 </Container>
-                </Col>
-            </Row>
-            <Row>
-                {this.state.recipes && <AddedRecipes recipe={this.state.recipes} /> }
-                
-            </Row>
-
-
-        </Container>
-        </Fragment>);
+            </Fragment>);
     }
 }
  
-export default Dashboard;
+const mapStateToProps = state=>{
+    return{
+        auth:state.authStatus.auth,
+        userRecipes:state.recipes.userRecipes,
+        favs:state.recipes.favoriterecipes
+    }
+}
+
+
+
+export default connect(mapStateToProps,{getCreatedRecipes, deleteRecipe , getFav ,deleteFav })(Dashboard);

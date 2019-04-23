@@ -1,53 +1,62 @@
 import React, { Component, Fragment } from 'react';
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
-import Badge from 'react-bootstrap/Badge'
-import {Link} from 'react-router-dom'
+import ListGroup from 'react-bootstrap/ListGroup'
+import ListGroupItem from 'react-bootstrap/ListGroupItem'
+import Button from 'react-bootstrap/Button';
 
 class SearchCards extends Component {
     state = {  }
 
 
-  removeFavs=(id)=>{
-
-  }
-
-
-
-
 renderCards=()=>{
+
   return this.props.recipe.map((r)=>{
-        
-        return(<Col xs={6} md={6} key={r.uri}>
-            <Card key={r.uri} className="search-card">
-                 <Card.Img variant="top" src={r.image} />
-                 <Card.Body>
-                   <Card.Title>{r.label}</Card.Title>
-                   <Card.Text>
-                    <Badge pill variant="warning">
-                         calories : {parseInt(r.calories) }
-                     </Badge>
-                     </Card.Text>
-                     <Card.Text>
-                     <Link 
-                      to={{
-                        pathname: "/details/1111",
-                        search: "?name="+r.label+"&fav=1" ,
-                      }}
-                     > Details</Link>
-                   <button >Remove favs</button>
-                   </Card.Text>
+    const {id,idMeal, strInstructions, strMeal, strMealThumb } = r;
+    if (strInstructions) {
+      let ingredients = [];
+      for(let i = 1 ; i< 21 ;i++){
+          try{
+              let a = eval("r.strIngredient" + i);
+              let b = eval("r.strMeasure" + i);
+              ingredients.push(a +" "+ b );
+          }catch(err){
+              console.log(err);
+          }
+      }
+      ingredients = ingredients.filter(entry => entry.trim() !== '')
+      //
 
-                   
-                 </Card.Body>
-             </Card>
-             </Col>
+
+        return(
+            <Card key={idMeal} className="horizontal-card">
+                        <Card.Img className="fav-img"  src={strMealThumb} />
+                        <Card.Body>
+                            <Card.Title>{strMeal}</Card.Title>
+                            <Card.Text>
+                                How to Make: {strInstructions}
+                            </Card.Text>
+                            
+                            <ListGroup className="list-group-flush">
+                            {
+                              ingredients.map((i ,index)=>{
+                               return <ListGroupItem key={index*67}>{i}</ListGroupItem>
+                              })  
+                            }
+                            </ListGroup>
+                            <Button variant="danger" 
+                            onClick={()=>{this.props.deleteFav(id)}}
+                            >delete</Button>
+                        </Card.Body>
+                    </Card>
+             
         )
-    })
+    }
+})
 }
-
     render() { 
         return (<Fragment>
+             <h1>Favorite Dishes</h1>
             {this.renderCards()}
             </Fragment>
          );

@@ -2,11 +2,12 @@ import {
     GET_RECIPES_PENDING,GET_RECIPES ,GET_RECIPES_FAIL,
     GET_LATEST_RECIPES_PENDING,GET_LATEST_RECIPES,GET_LATEST_RECIPES_FAIL,
     GET_SINGLE_RECIPES,GET_SINGLE_RECIPES_FAIL,GET_SINGLE_RECIPES_PENDING,
-    ADD_FAVORITE_RECIPE,GET_FAVORITE_RECIPES
+    ADD_FAVORITE_RECIPE,GET_FAVORITE_RECIPES,DELETE_FAVORITE_RECIPES,
+    ADD_USER_RECIPE,GET_USER_RECIPE,DELETE_USER_RECIPE
 } from '../reducers/recipesReducers'
 
 
-import {favRef} from '../../config/fire'
+import {favRef ,userRecipes} from '../../config/fire'
 
 
 export const getRecipes = (query ="chicken breast") =>{
@@ -90,72 +91,99 @@ export const getSingleRecipe = (id) =>{
     }
 }
 
-export const addFav = (recipeid , uid) => dispatch  =>{
+export const addFav = (recipe , uid) => dispatch  =>{
+    console.log('called');
     
-    favRef.child(uid).push().set(recipeid).then(()=>{
+    favRef.child(uid).push().set(recipe).then(()=>{
         dispatch({
             type:ADD_FAVORITE_RECIPE,
-            payload:recipeid
+            payload:recipe
         });
     })
-    // .then(()=>{
-    //     favRef
-    //     .child(uid)
-    //     .once('value')
-    //     .then((snapshot)=>{
-    //         let obj = snapshot.val()
-    //         let arr = []
-    //         for (var key in obj) {
-    //             if (obj.hasOwnProperty(key)) {
-    //                 arr.push(obj[key])
-    //             }
-    //         }
-    //         dispatch({
-    //             type:GET_FAVORITE_RECIPES,
-    //             payload:arr
-    //         })
-    //     })
-        
-    // })
     
 
 }
 
+
 export const getFav = (uid) => (dispatch) =>{
+    
     favRef
         .child(uid)
         .once('value')
         .then((snapshot)=>{
             let obj = snapshot.val()
-            let arr = []
+            const arr=[];
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
-                    arr.push(obj[key])
+                    let o = {id:key , ...obj[key]}
+                    arr.push(o)
                 }
             }
             dispatch({
                 type:GET_FAVORITE_RECIPES,
                 payload:arr
             })
-        })
+        }) 
         
             
        
 }
 
-export const deleteFav=(uid ,id)=> dispatch =>{
+
+export const deleteFav=(id,uid)=> dispatch =>{
     favRef
         .child(uid)
-        .orderByChild('idMeal')
-        .equalTo(id)
-        .on('child_added' , snapshot =>{
-            snapshot.ref.remove();
+        .child(id)
+        .remove()
+        .then(()=>{
+            dispatch({
+                type:DELETE_FAVORITE_RECIPES,
+                payload:id
+            })
         })
+        
 }
 
-export const addRecipe = (data) => dispatch =>{
+export const addRecipe = (data,uid) => dispatch =>{
 
+    userRecipes.child(uid).push().set(data).then(()=>{
+        dispatch({
+            type:ADD_USER_RECIPE,
+            payload:data
+        });
+    })
 }
-export const deleteRecipe = (id) => dispatch =>{
 
+export const getCreatedRecipes =(uid)=> dispatch =>{
+    userRecipes
+    .child(uid)
+    .once('value')
+    .then((snapshot)=>{
+        let obj = snapshot.val()
+        let arr = []
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                let o = {id:key , ...obj[key]}
+                arr.push(o)
+            }
+        }
+        //console.log(arr);
+        dispatch({
+            type:GET_USER_RECIPE,
+            payload:arr
+        })
+    })
+}
+export const deleteRecipe = (id , uid) => dispatch =>{
+    userRecipes
+        .child(uid)
+        .child(id)
+        .remove()
+        .then(()=>{
+            dispatch({
+                type:DELETE_USER_RECIPE
+            })
+        })
+        
+        
 }

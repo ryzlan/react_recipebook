@@ -81,7 +81,7 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps = (dispatch) =>{
   return {
     getRecipes:(q)=>dispatch(getRecipes(q)),
-    getLatRecipes:() => dispatch(getLatRecipes())
+    getLatRecipes:() => dispatch(getLatRecipes()),
   }
 }
 

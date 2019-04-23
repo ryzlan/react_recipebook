@@ -12,18 +12,27 @@ import {getFav} from '../../redux/actions/RecipesActions'
 
 
 class Navigation extends Component {
+state={
+  flag:true
+}
+  componentDidUpdate(prevProps) {
 
+    if (this.props.auth) {
+      if (prevProps.auth!== this.props.auth) {
+        this.props.getFav(this.props.auth.uid)
+      }
+    }
 
-
+}
     render() { 
-        const {auth ,favs } = this.props;
+        const {auth ,favs} = this.props;
         
         return (
           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
           <Navbar.Brand href="/">React-RecipeBook</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-          { auth ?
+          { auth ? 
             <Nav className="mr-auto">
               <SigninLinks email={auth.email} favs={favs} signout={this.props.signout}/>
             </Nav> :
@@ -43,6 +52,7 @@ class Navigation extends Component {
 const mapDispatchToProps = (dispatch) =>{
   return{
     signout:()=>dispatch(signout()),
+    getFav:(uid)=>dispatch(getFav(uid))
   }
 } 
 
